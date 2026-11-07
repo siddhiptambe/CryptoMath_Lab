@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CryptoMath Lab | Extended Euclidean Algorithm</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="lab-header">
+    <div class="brand">
+      <div class="brand-mark">CM</div>
+      <div>
+        <div class="brand-title">CryptoMath Lab</div>
+        <div class="brand-subtitle">Interactive Cryptography &amp; Number Theory Laboratory</div>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button class="ghost-btn" id="readGuideBtn">How it works</button>
+      <button class="ghost-btn" onclick="window.print()">Print</button>
+    </div>
+  </header>
+
+  <div class="page-shell">
+    <aside class="sidebar">
+      <div class="side-label">EXPERIMENT</div>
+      <div class="experiment-title">Extended Euclidean Algorithm</div>
+      <div class="experiment-subtitle">Extended Euclidean Algorithm</div>
+
+      <nav class="side-nav" aria-label="Experiment navigation">
+        <button class="nav-item active" data-section="aim">01 <span>Aim & Objectives</span></button>
+        <button class="nav-item" data-section="theory">02 <span>Theory</span></button>
+        <button class="nav-item" data-section="procedure">03 <span>Procedure</span></button>
+        <button class="nav-item" data-section="simulation">04 <span>Interactive Simulation</span></button>
+        <button class="nav-item" data-section="quiz">05 <span>Assessment / Quiz</span></button>
+        <button class="nav-item" data-section="references">06 <span>References</span></button>
+      </nav>
+
+      <div class="side-tip">
+        <strong>Tip</strong>
+        <p>Try the example first, then change <b>a</b> and <b>b</b> to observe how every division step changes.</p>
+      </div>
+    </aside>
+
+    <main class="content">
+      <section id="aim" class="section active-section">
+        <div class="section-heading">
+          <div>
+            <span class="eyebrow">EXPERIMENT</span>
+            <h1>Extended Euclidean Algorithm</h1>
+            <p>Interactive Cryptography and Number Theory Laboratory — explore the Extended Euclidean Algorithm, GCD and multiplicative inverses.</p>
+          </div>
+        </div>
+
+        <div class="info-grid">
+          <article class="info-card">
+            <!--<div class="card-icon">🎯</div>-->
+            <h3>Aim</h3>
+            <p>To implement the Extended Euclidean Algorithm to calculate the greatest common divisor (GCD) of two integers and determine the multiplicative inverse of an integer whenever it exists.</p>
+          </article>
+          <article class="info-card">
+            <!--<div class="card-icon">✓</div>-->
+            <h3>Objective</h3>
+            <p>To apply Extended Euclidean Algorithm, determine the GCD of two integers, calculate Bézout coefficients x and y, identify whether a multiplicative inverse exists, and verify the results mathematically using Bézout's identity and modular arithmetic.</p>
+          </article>
+          <article class="info-card">
+            <!--<div class="card-icon">🔐</div>-->
+            <h3>Cryptography Connection</h3>
+            <p>The multiplicative inverse is required in algorithms such as RSA and the Affine Cipher when an inverse modulo <b>m</b> is needed.</p>
+          </article>
+        </div>
+
+        <div class="callout">
+          <strong>What you will do:</strong>
+          Enter <b>a</b> and <b>b</b>, generate the Euclidean steps, watch the coefficient table update, and verify the final GCD and inverse.
+        </div>
+
+        <button class="primary-btn next-btn" data-next="theory">Continue to Theory →</button>
+      </section>
+
+      <section id="theory" class="section">
+        <div class="section-heading">
+          <div>
+            <span class="eyebrow">CONCEPTS</span>
+            <h2>Relevant Theory</h2>
+            <p>Understand the algorithm before running the simulation.</p>
+          </div>
+        </div>
+
+        <div class="theory-grid">
+          <article class="theory-card">
+            <h3>1. Euclidean Algorithm</h3>
+            <p>For integers <b>a</b> and <b>b</b>, repeatedly divide:</p>
+            <div class="formula">a = bq + r</div>
+            <p>Replace <b>(a, b)</b> with <b>(b, r)</b> until the remainder becomes zero. The last non-zero remainder is <b>gcd(a,b)</b>.</p>
+          </article>
+          <article class="theory-card">
+            <h3>2. Extended Euclidean Algorithm</h3>
+            <p>Calculates Bézout coefficients <b>x</b> and <b>y</b> satisfying:</p>
+            <div class="formula">ax + by = gcd(a,b)</div>
+            <p>Using Forouzan's forward recurrence, remainders and coefficients update concurrently without back-substitution.</p>
+          </article>
+          <article class="theory-card">
+            <h3>3. Multiplicative Inverse</h3>
+            <p>The inverse of <b>a modulo m</b> is a number <b>x</b> such that:</p>
+            <div class="formula">ax ≡ 1 (mod m)</div>
+            <p>The inverse exists <b>only when gcd(a,m) = 1</b>. If the EEA gives <b>ax + my = 1</b>, then <b>x mod m</b> is the inverse.</p>
+          </article>
+        </div>
+
+        <div class="worked-example">
+          <div>
+            <span class="mini-label">ALGORITHM STRUCTURE</span>
+            <h3>Extended Euclidean Algorithm (General Form)</h3>
+            <p>Tabular formulation from Forouzan &amp; Mukhopadhyay tracking Euclidean division and Bézout coefficients:</p>
+          </div>
+          <div class="table-wrap theory-table-wrap">
+            <table class="eea-table">
+              <thead>
+                <tr class="table-algo-title">
+                  <th colspan="4">Extended Euclidean Algorithm</th>
+                </tr>
+                <tr>
+                  <th style="width: 28%;">Calculate</th>
+                  <th style="width: 22%;">Which satisfies</th>
+                  <th style="width: 28%;">Calculate</th>
+                  <th style="width: 22%;">Which satisfies</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>r<sub>−1</sub> = a</td>
+                  <td>—</td>
+                  <td>x<sub>−1</sub> = 1; y<sub>−1</sub> = 0</td>
+                  <td>a = a x<sub>−1</sub> + b y<sub>−1</sub></td>
+                </tr>
+                <tr>
+                  <td>r<sub>0</sub> = b</td>
+                  <td>—</td>
+                  <td>x<sub>0</sub> = 0; y<sub>0</sub> = 1</td>
+                  <td>b = a x<sub>0</sub> + b y<sub>0</sub></td>
+                </tr>
+                <tr>
+                  <td>r<sub>1</sub> = a mod b<br>q<sub>1</sub> = ⌊a/b⌋</td>
+                  <td>a = q<sub>1</sub>b + r<sub>1</sub></td>
+                  <td>x<sub>1</sub> = x<sub>−1</sub> − q<sub>1</sub>x<sub>0</sub> = 1<br>y<sub>1</sub> = y<sub>−1</sub> − q<sub>1</sub>y<sub>0</sub> = −q<sub>1</sub></td>
+                  <td>r<sub>1</sub> = a x<sub>1</sub> + b y<sub>1</sub></td>
+                </tr>
+                <tr>
+                  <td>r<sub>2</sub> = b mod r<sub>1</sub><br>q<sub>2</sub> = ⌊b/r<sub>1</sub>⌋</td>
+                  <td>b = q<sub>2</sub>r<sub>1</sub> + r<sub>2</sub></td>
+                  <td>x<sub>2</sub> = x<sub>0</sub> − q<sub>2</sub>x<sub>1</sub><br>y<sub>2</sub> = y<sub>0</sub> − q<sub>2</sub>y<sub>1</sub></td>
+                  <td>r<sub>2</sub> = a x<sub>2</sub> + b y<sub>2</sub></td>
+                </tr>
+                <tr>
+                  <td>r<sub>3</sub> = r<sub>1</sub> mod r<sub>2</sub><br>q<sub>3</sub> = ⌊r<sub>1</sub>/r<sub>2</sub>⌋</td>
+                  <td>r<sub>1</sub> = q<sub>3</sub>r<sub>2</sub> + r<sub>3</sub></td>
+                  <td>x<sub>3</sub> = x<sub>1</sub> − q<sub>3</sub>x<sub>2</sub><br>y<sub>3</sub> = y<sub>1</sub> − q<sub>3</sub>y<sub>2</sub></td>
+                  <td>r<sub>3</sub> = a x<sub>3</sub> + b y<sub>3</sub></td>
+                </tr>
+                <tr class="dots-row">
+                  <td>⋮</td>
+                  <td>⋮</td>
+                  <td>⋮</td>
+                  <td>⋮</td>
+                </tr>
+                <tr>
+                  <td>r<sub>n</sub> = r<sub>n−2</sub> mod r<sub>n−1</sub><br>q<sub>n</sub> = ⌊r<sub>n−2</sub>/r<sub>n−1</sub>⌋</td>
+                  <td>r<sub>n−2</sub> = q<sub>n</sub>r<sub>n−1</sub> + r<sub>n</sub></td>
+                  <td>x<sub>n</sub> = x<sub>n−2</sub> − q<sub>n</sub>x<sub>n−1</sub><br>y<sub>n</sub> = y<sub>n−2</sub> − q<sub>n</sub>y<sub>n−1</sub></td>
+                  <td>r<sub>n</sub> = a x<sub>n</sub> + b y<sub>n</sub></td>
+                </tr>
+                <tr>
+                  <td>r<sub>n+1</sub> = r<sub>n−1</sub> mod r<sub>n</sub> = 0<br>q<sub>n+1</sub> = ⌊r<sub>n−1</sub>/r<sub>n</sub>⌋</td>
+                  <td>r<sub>n−1</sub> = q<sub>n+1</sub>r<sub>n</sub> + 0</td>
+                  <td>—</td>
+                  <td>d = gcd(a, b) = r<sub>n</sub><br>x = x<sub>n</sub>; y = y<sub>n</sub></td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="table-source-ref">References: Cryptography and Network Security by Forouzan, Mukhopadhyay</div>
+          </div>
+        </div>
+
+        <div class="worked-example">
+          <div>
+            <span class="mini-label">WORKED EXAMPLE</span>
+            <h3>Find gcd(17, 43) and the inverse of 17 modulo 43</h3>
+            <p>Step 1: Apply the Extended Euclidean Algorithm with inputs a = 17 and b = 43.</p>
+          </div>
+          <div class="table-wrap theory-table-wrap">
+            <table class="eea-table">
+              <thead>
+                <tr class="table-algo-title">
+                  <th colspan="4">Extended Euclidean Algorithm (a = 17, b = 43)</th>
+                </tr>
+                <tr>
+                  <th style="width: 28%;">Calculate</th>
+                  <th style="width: 22%;">Which satisfies</th>
+                  <th style="width: 28%;">Calculate</th>
+                  <th style="width: 22%;">Which satisfies</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>r<sub>−1</sub> = 17</td>
+                  <td>—</td>
+                  <td>x<sub>−1</sub> = 1; y<sub>−1</sub> = 0</td>
+                  <td>17 = 17(1) + 43(0)</td>
+                </tr>
+                <tr>
+                  <td>r<sub>0</sub> = 43</td>
+                  <td>—</td>
+                  <td>x<sub>0</sub> = 0; y<sub>0</sub> = 1</td>
+                  <td>43 = 17(0) + 43(1)</td>
+                </tr>
+                <tr>
+                  <td>r<sub>1</sub> = 17 mod 43 = 17<br>q<sub>1</sub> = ⌊17/43⌋ = 0</td>
+                  <td>17 = 0 × 43 + 17</td>
+                  <td>x<sub>1</sub> = 1 − 0(0) = 1<br>y<sub>1</sub> = 0 − 0(1) = 0</td>
+                  <td>17 = 17(1) + 43(0)</td>
+                </tr>
+                <tr>
+                  <td>r<sub>2</sub> = 43 mod 17 = 9<br>q<sub>2</sub> = ⌊43/17⌋ = 2</td>
+                  <td>43 = 2 × 17 + 9</td>
+                  <td>x<sub>2</sub> = 0 − 2(1) = −2<br>y<sub>2</sub> = 1 − 2(0) = 1</td>
+                  <td>9 = 17(−2) + 43(1)</td>
+                </tr>
+                <tr>
+                  <td>r<sub>3</sub> = 17 mod 9 = 8<br>q<sub>3</sub> = ⌊17/9⌋ = 1</td>
+                  <td>17 = 1 × 9 + 8</td>
+                  <td>x<sub>3</sub> = 1 − 1(−2) = 3<br>y<sub>3</sub> = 0 − 1(1) = −1</td>
+                  <td>8 = 17(3) + 43(−1)</td>
+                </tr>
+                <tr>
+                  <td>r<sub>4</sub> = 9 mod 8 = 1<br>q<sub>4</sub> = ⌊9/8⌋ = 1</td>
+                  <td>9 = 1 × 8 + 1</td>
+                  <td>x<sub>4</sub> = −2 − 1(3) = −5<br>y<sub>4</sub> = 1 − 1(−1) = 2</td>
+                  <td>1 = 17(−5) + 43(2)</td>
+                </tr>
+                <tr>
+                  <td>r<sub>5</sub> = 8 mod 1 = 0<br>q<sub>5</sub> = ⌊8/1⌋ = 8</td>
+                  <td>8 = 8 × 1 + 0</td>
+                  <td>—</td>
+                  <td>d = gcd(17, 43) = r<sub>4</sub> = 1<br>x = x<sub>4</sub> = −5; y = y<sub>4</sub> = 2</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="calculation-block">
+            <h4>Step 2: Calculate the GCD and Bézout coefficients</h4>
+            <p>The last non-zero remainder is <b>r<sub>4</sub> = 1</b>, so <b>gcd(17, 43) = 1</b>. The corresponding Bézout coefficients are <b>x = −5</b> and <b>y = 2</b>, satisfying <b>17(−5) + 43(2) = 1</b>.</p>
+            <h4>Step 3: Calculate and verify the multiplicative inverse</h4>
+            <div class="formula formula-left">Inverse = x mod b = −5 mod 43 = <b>38</b><br>17 × 38 = 646 = 43 × 15 + 1<br><b>Therefore, 17 × 38 ≡ 1 (mod 43)</b></div>
+            <p class="verification-explanation">Verification is successful because dividing 646 by 43 leaves remainder 1. Hence, <b>38 is the multiplicative inverse of 17 modulo 43</b>.</p>
+          </div>
+        </div>
+
+        <button class="primary-btn next-btn" data-next="procedure">Continue to Procedure →</button>
+      </section>
+
+      <section id="procedure" class="section">
+        <div class="section-heading">
+          <div>
+            <span class="eyebrow">METHOD</span>
+            <h2>Step-by-Step Procedure</h2>
+            <p>Follow these steps during the virtual experiment.</p>
+          </div>
+        </div>
+
+        <ol class="procedure-list">
+          <li><span>1</span><div><b>Choose inputs.</b><p>Enter positive integers <b>a</b> and <b>b</b>. For multiplicative inverse, treat <b>b</b> as the modulus.</p></div></li>
+          <li><span>2</span><div><b>Initialize base values.</b><p>Set r<sub>−1</sub> = a, x<sub>−1</sub> = 1, y<sub>−1</sub> = 0 and r<sub>0</sub> = b, x<sub>0</sub> = 0, y<sub>0</sub> = 1.</p></div></li>
+          <li><span>3</span><div><b>Calculate division &amp; quotient.</b><p>At each step i, compute quotient q<sub>i</sub> = ⌊r<sub>i−2</sub> / r<sub>i−1</sub>⌋ and remainder r<sub>i</sub> = r<sub>i−2</sub> mod r<sub>i−1</sub>, satisfying r<sub>i−2</sub> = q<sub>i</sub>r<sub>i−1</sub> + r<sub>i</sub>.</p></div></li>
+          <li><span>4</span><div><b>Update Bézout coefficients.</b><p>Calculate x<sub>i</sub> = x<sub>i−2</sub> − q<sub>i</sub>x<sub>i−1</sub> and y<sub>i</sub> = y<sub>i−2</sub> − q<sub>i</sub>y<sub>i−1</sub>, maintaining r<sub>i</sub> = ax<sub>i</sub> + by<sub>i</sub>.</p></div></li>
+          <li><span>5</span><div><b>Identify the GCD.</b><p>When r<sub>n+1</sub> = 0, stop. The last non-zero remainder r<sub>n</sub> is gcd(a,b), with Bézout coefficients x = x<sub>n</sub> and y = y<sub>n</sub>.</p></div></li>
+          <li><span>6</span><div><b>Check the inverse.</b><p>If gcd(a,b) = 1, the multiplicative inverse of a modulo b is x mod b. If gcd(a,b) &gt; 1, no inverse exists.</p></div></li>
+          <li><span>7</span><div><b>Verify.</b><p>Confirm Bézout's identity ax + by = gcd(a,b) and (a × inverse) mod b = 1.</p></div></li>
+        </ol>
+
+        <div class="warning-box">
+          <b>Important:</b> A multiplicative inverse does not exist when <b>gcd(a,b) ≠ 1</b>.
+        </div>
+
+        <button class="primary-btn next-btn" data-next="simulation">Open Interactive Simulation →</button>
+      </section>
+
+      <section id="simulation" class="section">
+        <div class="section-heading">
+          <div>
+            <h2>Run the Algorithm</h2>
+            <p>Change the inputs and see the complete calculation dynamically.</p>
+          </div>
+          <span class="live-indicator"><i></i> Live calculation</span>
+        </div>
+
+        <div class="input-panel">
+          <div class="input-group">
+            <label for="aInput">Integer <b>a</b></label>
+            <input id="aInput" type="number" min="1" step="1" value="17" />
+            <small>Number whose inverse is required</small>
+          </div>
+          <div class="operator">mod</div>
+          <div class="input-group">
+            <label for="bInput">Modulus <b>b</b></label>
+            <input id="bInput" type="number" min="1" step="1" value="43" />
+            <small>Positive modulus</small>
+          </div>
+          <div class="button-stack">
+            <button class="primary-btn" id="runBtn">▶ Run Algorithm</button>
+            <button class="secondary-btn" id="exampleBtn">Use Example</button>
+          </div>
+        </div>
+
+        <div id="errorBox" class="error-box hidden"></div>
+
+        <div class="result-grid">
+          <div class="result-card">
+            <span>GCD(a, b)</span>
+            <strong id="gcdResult">—</strong>
+          </div>
+          <div class="result-card">
+            <span>Bézout coefficient x</span>
+            <strong id="xResult">—</strong>
+          </div>
+          <div class="result-card">
+            <span>Bézout coefficient y</span>
+            <strong id="yResult">—</strong>
+          </div>
+          <div class="result-card inverse-card">
+            <span>Multiplicative inverse</span>
+            <strong id="inverseResult">—</strong>
+            <small id="inverseStatus">Run the algorithm</small>
+          </div>
+        </div>
+
+        <div class="verification-card">
+          <div>
+            <span class="mini-label">VERIFICATION</span>
+            <h3 id="verificationTitle">Run the algorithm to verify the result.</h3>
+            <p id="verificationText"></p>
+          </div>
+          <div class="verification-badge" id="verificationBadge">—</div>
+        </div>
+
+        <div class="steps-card">
+          <div class="steps-header">
+            <div>
+              <span class="mini-label">ALGORITHM TRACE</span>
+              <h3>Euclidean Division and Coefficients</h3>
+            </div>
+            <div class="step-controls">
+              <button class="secondary-btn small" id="prevBtn">← Previous</button>
+              <span id="stepCounter">Row 0 / 0</span>
+              <button class="secondary-btn small" id="nextStepBtn">Next →</button>
+              <button class="primary-btn small" id="showAllBtn">Show All</button>
+            </div>
+          </div>
+
+          <div class="progress-track"><div id="progressBar"></div></div>
+
+          <div class="table-wrap">
+            <table class="eea-table">
+              <thead>
+                <tr class="table-algo-title">
+                  <th colspan="4">Extended Euclidean Algorithm</th>
+                </tr>
+                <tr>
+                  <th style="width: 28%;">Calculate</th>
+                  <th style="width: 22%;">Which satisfies</th>
+                  <th style="width: 28%;">Calculate</th>
+                  <th style="width: 22%;">Which satisfies</th>
+                </tr>
+              </thead>
+              <tbody id="stepsBody">
+                <tr><td colspan="4" class="empty-state">Run the algorithm to generate the trace.</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="table-source-ref">References: Cryptography and Network Security by Forouzan, Mukhopadhyay</div>
+
+          <div class="trace-note" id="traceNote">
+            The highlighted row shows the current step. Use <b>Next</b> to reveal the algorithm gradually.
+          </div>
+        </div>
+
+        <button class="primary-btn next-btn" data-next="quiz">Continue to Assessment →</button>
+      </section>
+
+      <section id="quiz" class="section">
+        <div class="section-heading">
+          <div>
+            <span class="eyebrow">ASSESSMENT</span>
+            <h2>Quick Quiz</h2>
+            <p>Test your understanding after completing the simulation.</p>
+          </div>
+          <span class="score-pill" id="scorePill">0 / 5</span>
+        </div>
+
+        <form id="quizForm" class="quiz-form">
+          <div id="quizQuestions"></div>
+
+          <div class="quiz-actions">
+            <button type="submit" class="primary-btn" id="checkAnswersBtn" disabled> Check Answers
+            </button>
+            <p id="quizAttemptNotice" class="quiz-attempt-notice" aria-live="polite">
+              Please answer all 5 questions before checking your answers.
+            </p>
+            <button type="button" class="secondary-btn" id="resetQuizBtn">
+              Reset Quiz
+            </button>
+          </div>
+
+          <div id="quizResult" class="quiz-result hidden"></div>
+        </form>
+
+        <button class="primary-btn next-btn" data-next="references">Continue to References →</button>
+      </section>
+
+      <section id="references" class="section">
+        <div class="section-heading">
+          <div>
+            <span class="eyebrow">RESOURCES</span>
+            <h2>References</h2>
+          </div>
+        </div>
+
+        <div class="reference-grid">
+          <article class="reference-card references-card">
+            <h3>Core references</h3>
+            <ol>
+              <li>Behrouz A. Forouzan and Debdeep Mukhopadhyay, <i>Cryptography and Network Security</i>, McGraw-Hill, Chapter on Mathematics of Cryptography: Extended Euclidean Algorithm.</li>
+              <li>Thomas H. Cormen et al., <i>Introduction to Algorithms</i>, chapter on Number-Theoretic Algorithms.</li>
+              <li>Douglas R. Stinson, <i>Cryptography: Theory and Practice</i>.</li>
+              <li>Menezes, A. J., van Oorschot, P. C., and Vanstone, S. A., <i>Handbook of Applied Cryptography</i>. CRC Press, 1996, Section 2.4: Number Theory.</li>
+              <li>MIT OpenCourseWare, <i>Introduction to Algorithms</i>. Available at: https://ocw.mit.edu/courses/6-046j-introduction-to-algorithms-sma-5503-fall-2005/</li>
+              <li>Stanford University, “Number Theory: Euclidean Algorithm.” https://crypto.stanford.edu/pbc/notes/numbertheory/euclid.html</li>
+              <li>Bufalo, M., Bufalo, D., & Orlando, G. (2021). A note on the computation of the modular inverse for cryptography. Axioms, 10(2), 116.</li>
+            </ol>
+          </article>
+        </div>
+
+        <div class="final-callout experiment-complete">
+          <b>Experiment complete.</b>
+          You have implemented the Extended Euclidean Algorithm, observed its intermediate steps, found the GCD, and determined when a multiplicative inverse exists.
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <footer class="lab-footer">
+    <span>CryptoMath Lab</span>
+    <span>Interactive Cryptography &amp; Number Theory Laboratory</span>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
